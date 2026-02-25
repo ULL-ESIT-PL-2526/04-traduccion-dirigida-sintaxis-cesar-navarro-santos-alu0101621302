@@ -110,7 +110,6 @@ describe('Parser Tests', () => {
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(() => parse("3.5")).toThrow(); // Only integers are supported
     });
 
     test('should handle incomplete expressions', () => {
@@ -125,6 +124,47 @@ describe('Parser Tests', () => {
       expect(parse("1 - 2")).toBe(-1);
       expect(parse("10 - 4 - 3")).toBe(3);
       expect(parse("7 - 5 - 1")).toBe(1);
+    });
+  });
+
+  describe('Floating point numbers (FLOAT)', () => {
+    test('should parse standard decimal numbers', () => {
+      expect(parse("3.14")).toBe(3.14);
+      expect(parse("10.5 + 2.2")).toBe(12.7);
+      expect(parse("5.5 - 0.5")).toBe(5);
+    });
+
+    test('should parse decimals without leading or trailing digits', () => {
+      expect(parse(".5 * 4")).toBe(2);
+      expect(parse("5. + 1.5")).toBe(6.5);
+    });
+
+    test('should parse numbers in scientific notation', () => {
+      expect(parse("1e2")).toBe(100);   
+      expect(parse("2.5e1 + 5")).toBe(30);
+      expect(parse("3e-1 * 10")).toBe(3);
+      expect(parse("1.5e-2")).toBe(0.015);
+    });
+  });
+
+  describe('Comments skipping', () => {
+    test('should ignore comments at the end of an expression', () => {
+      expect(parse("5 + 5 // this is a simple addition")).toBe(10);
+      expect(parse("3 * 4 // returns 12")).toBe(12);
+    });
+
+    test('should ignore comments that contain numbers and operators', () => {
+      expect(parse("10 / 2 // 10 / 2 = 5 + 5 ** 2")).toBe(5);
+    });
+
+    test('should handle expressions with comments and newlines', () => {
+      const input = `
+        // First we add two numbers
+        2 + 3 
+        // Then we multiply
+        * 4
+      `;
+      expect(parse(input)).toBe(20);
     });
   });
 

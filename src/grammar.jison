@@ -1,12 +1,14 @@
 /* Lexer */
 %lex
 %%
-\s+                   { /* skip whitespace */; }
-[0-9]+                { return 'NUMBER';       }
-"**"                  { return 'OP';           }
-[-+*/]                { return 'OP';           }
-<<EOF>>               { return 'EOF';          }
-.                     { return 'INVALID';      }
+\/\/.*                                              { /* skip comments */;   }
+\s+                                                 { /* skip whitespace */; }
+(\d*\.\d+|\d+\.)([eE][-+]?\d+)?|\d+[eE][-+]?\d+     {return 'FLOAT';         }
+[0-9]+                                              { return 'NUMBER';       }
+"**"                                                { return 'OP';           }
+[-+*/]                                              { return 'OP';           }
+<<EOF>>                                             { return 'EOF';          }
+.                                                   { return 'INVALID';      }
 /lex
 
 /* Parser */
@@ -29,6 +31,8 @@ expression
 term
     : NUMBER
         { $$ = Number(yytext); }
+        | FLOAT
+        { $$ = Number($1); }
     ;
 %%
 
