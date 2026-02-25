@@ -31,7 +31,7 @@ expression
 term
     : NUMBER
         { $$ = Number(yytext); }
-        | FLOAT
+    | FLOAT
         { $$ = Number($1); }
     ;
 %%
