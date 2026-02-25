@@ -34,14 +34,16 @@ Type ".help" for more information.
 
 ## 3.1
 La diferencia entre /* skip whitespace */ y devolver un token es principalmente que en el primer caso no se está devolviendo nada
-ya que el patrón de los espacios en blanco es especial, no tiene tokens ni atributos, y por tanto no puede devolver un token.
+ya que el patrón de los espacios en blanco es especial, no tiene tokens ni atributos, y por tanto no puede devolver un token. Para otros
+lenguajes como python serían necesarios y si devolverían tokens.
 
 ## 3.2
-La secuencia producida por 123**45+@ es: NUMBER, NUMBER, NUMBER, OP, NUMBER, NUMBER, OP, INVALID
+La secuencia producida por 123**45+@ es: NUMBER, OP, NUMBER, OP, INVALID
 
 ## 3.3
 ** debe aparecer antes que [-+*/] debido a que si se quisiera utilizar el operador ** y [-+*/] estuviese declarado antes, nunca
 se llegaria a utilizar **, en vez de eso se estaría reconociendo como dos signos de multiplicación OP, OP -> *, *.
+Se utiliza Longest Match.
 
 ## 3.4
 Se devuelve EOF cuando ya no queda nada más que leer del buffer e indicar que se finalizó.
